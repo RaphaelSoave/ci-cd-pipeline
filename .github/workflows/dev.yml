@@ -2,7 +2,7 @@ name: CI Validation (Dev)
 
 on:
   pull_request:
-    [cite_start]branches: [ "dev" ] # Critère : On Merge Request to dev 
+    branches: [ "dev" ] 
 
 jobs:
   test-and-validate:
@@ -14,19 +14,19 @@ jobs:
         run: npm install
 
       - name: Run linting
-        [cite_start]run: npm run lint
+        run: npm run lint
 
       - name: Run npm audit
-        [cite_start]run: npm audit 
+        run: npm audit 
 
       - name: Snyk Security Analysis
-        [cite_start]uses: snyk/actions/node@master 
+        uses: snyk/actions/node@master 
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Execute all tests
-        [cite_start]run: npm test 
+        run: npm test 
 
       - name: Build Docker images
-        [cite_start]run: docker-compose build 
+        run: docker-compose build 
 

@@ -8,6 +8,17 @@ on:
 jobs:
   test-and-validate:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        service:
+          - frontend
+          - backend
+
+    defaults:
+      run:
+        working-directory: ./${{ matrix.service }}
+
     steps:
       - uses: actions/checkout@v4
     

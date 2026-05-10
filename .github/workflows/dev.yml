@@ -37,6 +37,9 @@ jobs:
       - name: Run npm audit
         run: npm audit --audit-level=high || true
 
+      - name: Download Snyk
+        run: npm install -g snyk
+
       - name: Snyk Security Analysis
         uses: snyk/actions/node@master 
         env:

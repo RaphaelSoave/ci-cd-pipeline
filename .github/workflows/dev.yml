@@ -42,7 +42,6 @@ jobs:
 
       - name: Snyk Security Analysis
         run: snyk test
-        continues-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 

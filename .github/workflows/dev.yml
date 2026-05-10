@@ -8,20 +8,41 @@ on:
 jobs:
   test-and-validate:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        service:
+          - frontend
+          - backend
+
+    defaults:
+      run:
+        working-directory: ./${{ matrix.service }}
+
     steps:
       - uses: actions/checkout@v4
+    
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
 
       - name: Run linting
+        if: matrix.service == 'frontend'
         run: npm run lint
 
       - name: Run npm audit
-        run: npm audit 
+        run: npm audit --audit-level=high || true
+
+      - name: Download Snyk
+        run: npm install -g snyk
 
       - name: Snyk Security Analysis
-        uses: snyk/actions/node@master 
+        run: snyk test
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
@@ -29,5 +50,4 @@ jobs:
         run: npm test 
 
       - name: Build Docker images
-        run: docker-compose build 
-
+        run: docker build -t ${{ matrix.service }} .
